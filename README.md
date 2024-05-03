@@ -1,1 +1,1 @@
-# Money-Manager
+The src folder has all components, pages and utilities for homepage.
