@@ -1,20 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
+//import PieChartStat from "./src/pages/PieChart";
+import { NavigationContainer } from '@react-navigation/native';
+//import TransactionList from "./src/pages/TransactionList";
+import Tabs from './src/util/Tabs';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <MyCalendar /> 
-    </View>
+    <NavigationContainer>
+      <Tabs />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
