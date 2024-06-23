@@ -22,7 +22,7 @@ const Tabs = () => {
     >
       <Tab.Screen
         name="Home"
-        component={PieChartStat}
+        component={ PieChartStat }
         options={{
           tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons
