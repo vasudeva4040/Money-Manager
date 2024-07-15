@@ -1,10 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Feather } from "@expo/vector-icons";
+import Home from "../pages/Home"
 import PieChartStat from "../pages/PieChart";
 import TransactionList from "../pages/TransactionList";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import ProfilePage from "../pages/ProfilePage"
+import { MaterialCommunityIcons,Ionicons,FontAwesome } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,7 +22,7 @@ const Tabs = () => {
     >
       <Tab.Screen
         name="Home"
-        component={ PieChartStat }
+        component={ Home }
         options={{
           tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons
@@ -53,6 +53,19 @@ const Tabs = () => {
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "book" : "book-outline"}
+              size={24}
+              color="black"
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfilePage}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <FontAwesome
+              name={focused ? "user" : "user-o"}
               size={24}
               color="black"
             />

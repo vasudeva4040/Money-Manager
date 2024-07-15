@@ -1,4 +1,5 @@
 const CatList = [
+    'Income',
     'Entertainment',
     'Travel',
     'Food',

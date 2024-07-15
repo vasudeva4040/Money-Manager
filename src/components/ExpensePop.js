@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   View,
@@ -13,28 +12,34 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import CatList from "../util/CatList";
-import ColorList from "../util/ColorList";
-import DataList from "../util/DataList";
+import { addExpense,addIncome } from '../util/Api'
 
-
-const ExpensePop = ({onSave}) => {
+const ExpensePop = ({setValid}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [amount, setAmount] = useState("");
   const [spentOn, setSpentOn] = useState("");
   const [description, setDescription] = useState("");
   const categories = CatList;
   const handleSave = () => {
-    const category = ColorList[spentOn]
-    console.log(category)
-    const newItem = {
-      icon: category.icon,
-      description:description,
-      color:category.color,
-      amount:parseFloat(amount)
+    if (spentOn==='Income'){
+        const newItem = {
+        "user": "1",
+        "amount": amount,
+      }
+      addIncome(newItem)
+      setModalVisible(false)
+      setValid(true)
+    }else{
+      const newItem = {
+        "user": "1",
+        "amount": amount,
+        "category": spentOn,
+        "description": description,
+      }
+      addExpense(newItem)
+      setModalVisible(false)
+      setValid(true)
     }
-    DataList.push(newItem)
-    onSave(DataList)
-    setModalVisible(false)
   }
   return (
     <View style={styles.container}>

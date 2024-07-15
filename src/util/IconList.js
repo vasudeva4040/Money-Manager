@@ -1,0 +1,40 @@
+const IconList = {
+    Entertainment:{
+        icon:'youtube-tv',
+        color:'red'
+    },
+    Food:{
+        icon:'food',
+        color:'orangered'
+    },
+    Shopping:{
+        icon:'shopping',
+        color:'chocolate'
+    },
+    Travel:{
+        icon:'train-car',
+        color:'darkgreen'
+    },
+    Health:{
+        icon:'hospital-box-outline',
+        color:'crimson'
+    },
+    Sports:{
+        icon:'soccer-field',
+        color:'green'
+    },
+    Bills:{
+        icon:'cash-check',
+        color:'green'
+    },
+    Electronics:{
+        icon:'cellphone-link',
+        color:'darkblue'
+    },
+    Others:{
+        icon:'cart-outline',
+        color:'teal'
+    }
+}
+
+export default IconList

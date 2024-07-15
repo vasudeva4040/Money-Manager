@@ -1,42 +1,47 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { View,StyleSheet,SafeAreaView,Text,FlatList } from "react-native";
+import { getBalance,getRecentTransactions } from "../util/Api"
 import Icon from "../components/Icon";
 import ExpenseList from "../components/ExpenseList";
-import DataList from "../util/DataList";
 import ExpensePop from "../components/ExpensePop";
 import DayDate from "../components/DayDate";
+import IconList from "../util/IconList";
 
 const Home = () => {
-    const [balance,setBalance] = useState(52876.45)
-    const [dataList,setDataList] = useState(DataList)
-    const [showProfie, setShowProfile] = useState(false)
-    const handleSaveExpense = (newDataList) => {
-        const updatedDataList = [...dataList, ...newDataList]
-        const l = newDataList.length
-        const newExpense = newDataList[l-1]
-        const newBalance = balance - newExpense.amount
-        console.log(newBalance,newExpense)
-        setDataList(updatedDataList)
-        setBalance(newBalance)
+    const [balance,setBalance] = useState("no money")
+    const [dataList,setDataList] = useState([])
+    const [valid,setValid] = useState(true)
+    const fetchData = () => {
+        getBalance(setBalance)
+        getRecentTransactions(setDataList)
     }
-    const renderItem = ({ item }) => (
-        <ExpenseList
-            icon={item.icon}
+    useEffect (() => {
+        if (valid){
+            fetchData()
+            setValid(false)
+        }
+    },[valid])
+
+    const renderItem = ({ item }) => {
+        const category = item.category
+        const { icon,color } = IconList[category]
+        return (
+            <ExpenseList     
+            icon={icon}
             description={item.description}
-            color={item.color}
+            color={color}
             amount={item.amount}
-        />
-    )
-    
+            />
+        )
+    }
+
     return(
         <SafeAreaView style={styles.container}>
             <View style={[styles.wrap,{marginTop:10}]}>
                 <DayDate/>
                 <View style={{flex:1}}/>
                 <Icon name={'bell-o'} size={24} color={'black'}/>
-                <View style={{marginHorizontal:10}}/>
-                <Icon name={'user-circle-o'} size={30} color={'black'}/>
             </View>
             <View style={[styles.wrap,{marginTop:40}]}>
                 <View>
@@ -44,7 +49,7 @@ const Home = () => {
                     <Text style={styles.balanceValue}>{balance}</Text>
                 </View>
                 <View>
-                    <ExpensePop onSave={handleSaveExpense}/>
+                    <ExpensePop setValid={setValid}/>
                 </View>
             </View>
             <View style={[{paddingHorizontal:20},{marginTop:20}]}>
@@ -52,7 +57,7 @@ const Home = () => {
             </View>
             <View style={styles.listWrap}>
                 <FlatList
-                    data={DataList}
+                    data={dataList}
                     renderItem={renderItem}
                     keyExtractor={item=>item.id}
                     ItemSeparatorComponent={() => <View style={{height:10}}/>}
@@ -66,7 +71,7 @@ const Home = () => {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:'oldlace',
+        backgroundColor:'lavender',
         // alignItems:'center'
     },
     shadowProp: {  

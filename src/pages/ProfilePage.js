@@ -29,7 +29,7 @@ const ProfilePage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "oldlace",
+    backgroundColor: "lavender",
   },
   profile: {
     alignItems: "center",
