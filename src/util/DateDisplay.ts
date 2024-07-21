@@ -10,7 +10,7 @@ export default class DateDisplay {
     }
   
     public get_weeks_data() {
-      const week_values: string[] = [];
+      const week_values: { range: string, startDate: Date, endDate: Date }[] = [];
       let today = this.curr_date.getDay();
       if (!today) {
         today = 7;
@@ -20,13 +20,16 @@ export default class DateDisplay {
         startDate.setDate(startDate.getDate() - (today + 7 * i));
         const endDate = new Date(startDate);
         endDate.setDate(startDate.getDate() + 6);
-        const week = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(0, 0, 0, 0);
+        const range = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${
           endDate.getMonth() + 1
         }/${endDate.getDate()}`;
-        week_values.push(week);
+        week_values.push({ range, startDate, endDate });
       }
       return week_values.reverse();
     }
+
     public get_months_data() {
       const months = [
         "Jan",
@@ -42,24 +45,32 @@ export default class DateDisplay {
         "Nov",
         "Dec",
       ];
-      const current_month = months[this.curr_month];
-      const sorted_months = [
-        ...months.slice(this.curr_month, 11),
-        ...months.slice(0, this.curr_month),
-      ];
-      console.log(sorted_months);
-      return sorted_months;
+      const month_values: { range: string, startDate: Date, endDate: Date }[] = [];
+      
+      // Start from the current month and go backwards
+      for (let i = 0; i < 12; i++) {
+        const monthIndex = (this.curr_month - i + 12) % 12;
+        const year = new Date().getFullYear() - Math.floor((this.curr_month - i) / 12);
+        const startDate = new Date(year, monthIndex, 1);
+        const endDate = new Date(year, monthIndex + 1, 0); // last day of the month
+        const range = months[monthIndex];
+        month_values.push({ range, startDate, endDate });
+      }
+      
+      console.log(month_values);
+      return month_values;
     }
   
     public get_years_data() {
-      const years: string[] = [];
+      const years: { range: string, startDate: Date, endDate: Date }[] = [];
       for (let i = 0; i < 20; i++) {
-        const today = new Date();
-        today.setFullYear(today.getFullYear() - i);
-        years.push(`${today.getFullYear()}`);
+        const range = new Date().getFullYear() - i;
+        const startDate = new Date(range, 0, 1); // January 1st of the year
+        const endDate = new Date(range, 11, 31); // December 31st of the year
+        years.push({ range: `${range}`, startDate, endDate });
       }
-      //reverse this array
-      console.log(years);
-      return years;
+      // Reverse the array to get years in ascending order
+      console.log(years.reverse());
+      return years.reverse();
     }
   }
