@@ -1,6 +1,4 @@
-const ipAddress = '192.168.29.171'
-const gauthamIpAddress = '192.168.29.171';
-
+const ipAddress = '192.168.1.34'
 
 const getTransactionsList = async (
   startTime,
@@ -51,7 +49,7 @@ const getTransactionAmountByCategory = async (
 }
 
 const getBalance = (setBalance) => {
-  fetch(`http://${ipAddress}:5000/api/balance?user=1`)
+  fetch(`http://${ipAddress}:3000/api/balance?user=1`)
     .then((response) => response.json())
     .then((data) => {
       // console.log('fetched data',data)
@@ -62,7 +60,7 @@ const getBalance = (setBalance) => {
 }
 
 const getRecentTransactions = (setDataList) => {
-  fetch(`http:///${ipAddress}:5000/api/recents?user=1`)
+  fetch(`http://${ipAddress}:3000/api/recents?user=1`)
     .then((response) => response.json())
     .then((data) => {
       // console.log('fetched data',data)
@@ -72,7 +70,7 @@ const getRecentTransactions = (setDataList) => {
 }
 
 const addExpense = (newItem) => {
-  fetch(`http:///${ipAddress}:5000/api/expense`, {
+  fetch(`http://${ipAddress}:3000/api/expense`, {
     method: 'POST',
     headers: { 'content-Type': 'application/json' },
     body: JSON.stringify(newItem)
@@ -83,7 +81,7 @@ const addExpense = (newItem) => {
 }
 
 const addIncome = (newItem) => {
-  fetch(`http:///${ipAddress}:5000/api/income`, {
+  fetch(`http://${ipAddress}:3000/api/income`, {
     method: 'PUT',
     headers: { 'content-Type': 'application/json' },
     body: JSON.stringify(newItem)
