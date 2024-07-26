@@ -39,7 +39,7 @@ const DayDate = () => {
 
 const styles = StyleSheet.create({
     container:{
-        justifyContent:'space-around'
+      alignItems:'flex-end'
     },
     date:{
         fontSize:20,

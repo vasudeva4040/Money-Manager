@@ -2,11 +2,12 @@ import React from "react";
 import { useState,useEffect } from "react";
 import { View,StyleSheet,SafeAreaView,Text,FlatList } from "react-native";
 import { getBalance,getRecentTransactions } from "../util/Api"
-import Icon from "../components/Icon";
 import ExpenseList from "../components/ExpenseList";
 import ExpensePop from "../components/ExpensePop";
 import DayDate from "../components/DayDate";
 import IconList from "../util/IconList";
+import AppName from "../components/AppName";
+import Icon from "../components/Icon";
 
 const Home = () => {
     const [balance,setBalance] = useState("no money")
@@ -39,14 +40,17 @@ const Home = () => {
     return(
         <SafeAreaView style={styles.container}>
             <View style={[styles.wrap,{marginTop:10}]}>
-                <DayDate/>
+                <AppName />
                 <View style={{flex:1}}/>
-                <Icon name={'bell-o'} size={24} color={'black'}/>
+                <DayDate/>
             </View>
             <View style={[styles.wrap,{marginTop:40}]}>
                 <View>
                     <Text style={styles.balanceText}>Balance:</Text>
-                    <Text style={styles.balanceValue}>{balance}</Text>
+                    <View style={styles.balanceStyle}>
+                        <Icon name={'rupee'} size={25} color={"black"} />
+                        <Text style={styles.balanceValue}>{balance}</Text>
+                    </View>
                 </View>
                 <View>
                     <ExpensePop setValid={setValid}/>
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
     },
     wrap:{
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: 'space-between',
         paddingHorizontal: 20,
         alignItems:'center'
     },
@@ -90,10 +94,15 @@ const styles = StyleSheet.create({
         fontSize:20,
         fontWeight:'300'
     },
+    balanceStyle:{
+        flexDirection:'row',
+        alignItems:'center',
+    },
     balanceValue:{
         fontSize:30,
         fontWeight:'600',
-        color:'black'
+        color:'black',
+        marginLeft:5
     },
     spendText:{
         fontSize:24,

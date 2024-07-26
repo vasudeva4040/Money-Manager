@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'space-between',
         padding:15,
-        backgroundColor:'white',
+        backgroundColor:'ghostwhite',
         borderRadius:10
     },
     shadowProp: {  
