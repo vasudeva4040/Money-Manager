@@ -1,6 +1,5 @@
-
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import { StatusBar } from 'expo-status-bar'
+import React, { useState, useEffect } from 'react'
 import {
   StyleSheet,
   FlatList,
@@ -8,73 +7,116 @@ import {
   TouchableOpacity,
   Button,
   Text,
-  View,
-} from "react-native";
-import PieChart from "react-native-pie-chart";
-import HorizontalSlider from "react-horizontal-slider";
-import { AntDesign } from "@expo/vector-icons";
-import DateDisplay from "../util/DateDisplay";
+  View
+} from 'react-native'
+import PieChart from 'react-native-pie-chart'
+import HorizontalSlider from 'react-horizontal-slider'
+import { AntDesign } from '@expo/vector-icons'
+import DateDisplay from '../util/DateDisplay'
+import { getTransactionAmountByCategory } from '../util/Api'
+import { getFormattedDate } from '../util/DateConversion'
+import randomColor from 'randomcolor';
 
 const PieChartStat = () => {
   const widthAndHeight = 250;
-  const categories = ["Food", "Travel", "Movies", "Others", "Grocery"];
-  const series = [123, 321, 123, 789, 537];
-  series.sort();
-  const sliceColor = ["#fbd203", "#ffb300", "#ff9100", "#ff6c00", "#ff3c00"];
-  const obj = new DateDisplay();
+  const [sliceColor, setSliceColor] = useState([randomColor()]);
+  const obj = new DateDisplay()
   const [frequency, setFrequency] = useState(obj.get_weeks_data());
+  const [series, setSeries] = useState([100]);
 
-  useEffect(() => {});
 
-  const data = [];
+  const [pieChartData, setPieChartData] = useState(null)
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
+  const transactionType = 'Expense'
+
+  // Whenever the parameters changes call the backend to get the data.
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getTransactionAmountByCategory(
+          startDate,
+          endDate,
+          transactionType
+        )
+        setPieChartData(data)
+      } catch (err) {
+        setError(err)
+      }
+    }
+    fetchData()
+  }, [startDate, endDate, transactionType])
+
+  const [data, setData] = useState([]);
+
+  const ModifyStartTimeEndTime = () => {
+    setStartDate(getFormattedDate(frequency[period].startDate));
+    setEndDate(getFormattedDate(frequency[period].endDate));
+  }
 
   const PerformWeekly = () => {
-    setFrequency(obj.get_weeks_data());
-    setPeriod(0);
-  };
+    setFrequency(obj.get_weeks_data())
+    setPeriod(0)
+    ModifyStartTimeEndTime()
+  }
 
   const PerformMonthly = () => {
-    setFrequency(obj.get_months_data());
-    setPeriod(0);
-  };
+    setFrequency(obj.get_months_data())
+    setPeriod(0)
+    ModifyStartTimeEndTime()
+  }
 
   const PerformYearly = () => {
-    setFrequency(obj.get_years_data());
-    setPeriod(0);
-  };
+    setFrequency(obj.get_years_data())
+    setPeriod(0)
+    ModifyStartTimeEndTime()
+  }
 
-  const [period, setPeriod] = useState(frequency.length - 1);
-  console.log(period);
+  const [period, setPeriod] = useState(frequency.length - 1)
 
   const moveLeft = () => {
-    setPeriod((period - 1) < 0 ? 0: period - 1);
-  };
+    setPeriod(period - 1 < 0 ? 0 : period - 1)
+    ModifyStartTimeEndTime()
+  }
 
   const moveRight = () => {
-    setPeriod((period + 1) > frequency.length - 1 ? frequency.length -1 : period + 1);
-  };
+    setPeriod(
+      period + 1 > frequency.length - 1 ? frequency.length - 1 : period + 1
+    )
+    ModifyStartTimeEndTime()
+  }
 
   useEffect(() => {
-    for (let i = 0; i < categories.length; i++) {
-      const obj = {
-        category: categories[i],
-        value: series[i],
-        color: sliceColor[i],
-        percentage: Math.floor(
-          (series[i] / series.reduce((acc, curr) => acc + curr, 0)) * 100
-        ),
-        id: i,
-      };
-      data.push(obj);
+    if (pieChartData) {
+      const categories = Object.keys(pieChartData)
+      let series = Object.values(pieChartData);
+      let sliceColor = [];
+      let data = [];
+      for (let i = 0; i < categories.length; i++) {
+        sliceColor.push(randomColor());
+        const obj = {
+          category: categories[i],
+          value: series[i],
+          color: sliceColor[i],
+          percentage: Math.floor(
+            (series[i] / series.reduce((acc, curr) => acc + curr, 0)) * 100
+          ),
+          id: i
+        }
+        data.push(obj)
+      }
+      setSliceColor(sliceColor.length > 0 ? sliceColor : [randomColor()]);
+      setSeries(series.length > 0 ? series : ["100"]);
+      setData(data);
     }
-  }, [frequency, period]);
+  }, [pieChartData])
 
   const renderItem = ({ item }) => (
     <View
       style={{
         padding: 20,
-        justifyContent: "space-around",
-        backgroundColor: item.color,
+        justifyContent: 'space-around',
+        backgroundColor: item.color
       }}
     >
       <View style={styles.tableData}>
@@ -83,7 +125,7 @@ const PieChartStat = () => {
         <Text>{item.percentage} % </Text>
       </View>
     </View>
-  );
+  )
 
   return (
     <View style={styles.container}>
@@ -100,17 +142,9 @@ const PieChartStat = () => {
       </View>
 
       <View style={styles.horizontalSlider}>
-        {/* <ScrollView
-          key={frequency}
-          horizontal
-          contentContainerStyle={styles.scrollViewContent}
-          showsHorizontalScrollIndicator={false}
-        >
-          {renderScrollViewContent()}
-        </ScrollView> */}
         <View style={styles.contentItem}>
-        <Text>{frequency[period]}</Text>
-      </View>
+          <Text>{frequency[period].range}</Text>
+        </View>
         <TouchableOpacity style={styles.arrowLeft} onPress={moveLeft}>
           <AntDesign name="leftcircleo" size={24} color="black" />
         </TouchableOpacity>
@@ -130,79 +164,79 @@ const PieChartStat = () => {
         <FlatList data={data} renderItem={renderItem} />
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor:'lavender'
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'lavender'
   },
   title: {
     fontSize: 24,
-    margin: 10,
+    margin: 10
   },
   list: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "black",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: 'black'
   },
   buttons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around'
   },
   optionButton: {
     flex: 1,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: "#e0e0e0",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#e0e0e0',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   optionButtonText: {
-    color: "#333",
-    fontWeight: "bold",
+    color: '#333',
+    fontWeight: 'bold'
   },
   tableData: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around'
   },
   option: {
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginHorizontal: 5,
     borderRadius: 20,
-    backgroundColor: "#e0e0e0",
-    color: "#333",
-    fontWeight: "bold",
+    backgroundColor: '#e0e0e0',
+    color: '#333',
+    fontWeight: 'bold'
   },
   horizontalSlider: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10
   },
   scrollViewContent: {
-    alignItems: "center",
+    alignItems: 'center'
   },
   contentItem: {
     width: 400,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   arrowLeft: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
-    padding: 10,
+    padding: 10
   },
   arrowRight: {
-    position: "absolute",
+    position: 'absolute',
     right: 0,
-    padding: 10,
-  },
-});
+    padding: 10
+  }
+})
 
-export default PieChartStat;
+export default PieChartStat

@@ -13,7 +13,7 @@ const IconList = {
     },
     Travel:{
         icon:'train-car',
-        color:'darkgreen'
+        color:'teal'
     },
     Health:{
         icon:'hospital-box-outline',
@@ -25,7 +25,7 @@ const IconList = {
     },
     Bills:{
         icon:'cash-check',
-        color:'green'
+        color:'forestgreen'
     },
     Electronics:{
         icon:'cellphone-link',

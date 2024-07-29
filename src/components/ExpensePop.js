@@ -62,12 +62,14 @@ const ExpensePop = ({setValid}) => {
               <TextInput
                 style={styles.input}
                 placeholder="add amount"
+                placeholderTextColor={'grey'}
                 keyboardType="numeric"
                 onChangeText={(text) => setAmount(text)}
               />
               <TextInput
                 style={styles.input}
                 placeholder="Description"
+                placeholderTextColor={'grey'}
                 onChangeText={(text) => setDescription(text)}
               />
               <View style={styles.pickWrap}>
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   input: {
-    borderColor: "gray",
+    borderColor: "grey",
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
